@@ -23,9 +23,22 @@ gpu_set_zwriteenable(true);
 
 vertex_submit(vbuffer, pr_trianglelist, sprite_get_texture(spr_grass, 0));
 
+gpu_set_alphatestenable(true);
+gpu_set_alphatestref(10);
+
+shader_set(shd_test);
+
+array_sort(object_positions, function(a, b) {
+    var dist_a = point_distance(Player.x, Player.y, a.x, a.y);
+    var dist_b = point_distance(Player.x, Player.y, b.x, b.y);
+    return dist_b - dist_a;
+});
+
 for (var i = 0; i < array_length(object_positions); i++) {
     matrix_set(matrix_world, matrix_build(object_positions[i].x, object_positions[i].y, 0, 0, 0, 0, 1, 1, 1));
-    vertex_submit(tree, pr_trianglelist, sprite_get_texture(spr_tree, 0));
-    //vertex_submit(glass_block, pr_trianglelist, -1);
+    //vertex_submit(tree, pr_trianglelist, sprite_get_texture(spr_tree, 0));
+    vertex_submit(glass_block, pr_trianglelist, -1);
     matrix_set(matrix_world, matrix_build_identity());
 }
+
+shader_reset();
